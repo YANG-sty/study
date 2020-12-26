@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util https://www.springframework.org/schema/util/spring-util.xsd">
+
+
+    <!-- 无参构造函数 -->
+    <!-- score 默认是单例模式 -->
+    <bean name="studentSingleton" class="com.sys.yang.standard2.Student" scope="singleton"/>
+
+    <!-- 有参构造函数 -->
+    <bean name="studentParam" class="com.sys.yang.standard2.Student">
+        <!-- 参数名称， 参数位置，参数类型，  参数值 -->
+        <!-- 参数位置， 参数类型，可以用指定，如果在没有冲突的情况下 -->
+        <!-- String 是引用的数据类型，需要些全路径 -->
+        <constructor-arg name="id" index="0" type="int" value="1"/>
+        <constructor-arg name="name" index="1" type="java.lang.String" value="zhangsan"/>
+        <constructor-arg name="age" index="2" type="java.lang.String" value="18"/>
+    </bean>
+    <!-- set 方式注入-->
+    <bean name="studentSet" class="com.sys.yang.standard2.Student">
+        <property name="id" value="1"/>
+        <property name="age" value="10"/>
+    </bean>
+
+    <!-- 注入接口 -->
+    <!-- 无参构造函数 -->
+    <!-- score 默认是单例模式 -->
+    <bean name="orderService" class="com.sys.yang.standard.OrderServiceImpl" scope="singleton"/>
+
+    <!-- 使用有参构造器进行注入 -->
+    <bean name="orderManagerParam" class="com.sys.yang.standard.OrderManagerSet">
+        <!-- 引入对象的时候使用 ref -->
+        <constructor-arg name="orderService" ref="orderService"/>
+    </bean>
+
+    <!-- 使用 set方式, 方法中不要提供有参构造器，如要要提供构造器，需要提供有参和无参的两种构造器，或者只提供一个无参构造器 -->
+    <bean name="orderManagerSet" class="com.sys.yang.standard.OrderManagerSet">
+        <property name="orderService" ref="orderService"/>
+    </bean>
+
+    <!-- 工厂模式 -->
+    <bean name="factherFactory" class="com.sys.yang.standard.factory.FactherFactory"/>
+    <!-- 创建出 Soon1 对象-->
+    <bean name="soon1" factory-bean="factherFactory" factory-method="getSoon1"/>
+    <!-- 创建出 Soon2 对象-->
+    <bean name="soon2" factory-bean="factherFactory" factory-method="getSoon2"/>
+
+
+    <!-- 自动注入, 是根据 set 进行注入  -->
+    <!-- autowire byName 根据名字进行注入操作，只能自动注入自己写的实体对象 -->
+    <bean name="orderManagerAutoByName" class="com.sys.yang.standard.OrderManagerSet" autowire="byName"/>
+
+    <!-- 自动注入, 是根据 set 进行注入  -->
+    <!-- 根据类型进行注入，只能自动注入自己写的实体对象 -->
+    <bean name="orderManagerAutoByType" class="com.sys.yang.standard.OrderManagerSet" autowire="byType"/>
+
+    <!-- 自动注入, 是根据 参构造函数 进行注入 -->
+    <!-- 根据id 进行注入，id 没有找的时候根据 name 进行注入-->
+    <bean name="orderManagerAutoParam" class="com.sys.yang.standard.OrderManagerSet" autowire="constructor"/>
+
+
+    <!-- 特殊函数的构造器，准备参数 -->
+    <bean name="socre1" class="com.sys.yang.standard2.Score">
+        <!-- property 使用set方法注入 -->
+        <!-- <property name="type" value="java"/> -->
+        <!-- constructor-arg 使用 有参构造器进行注入 -->
+        <constructor-arg name="type" value="java"/>
+        <constructor-arg name="level" value="A"/>
+    </bean>
+    <bean name="socre2" class="com.sys.yang.standard2.Score">
+        <constructor-arg name="type" value="C++"/>
+        <constructor-arg name="level" value="B"/>
+    </bean>
+    <bean name="student" class="com.sys.yang.standard2.Student">
+        <property name="id" value="1"/>
+        <property name="age" value="10"/>
+    </bean>
+    <!-- 特殊函数的构造器，进行注入 -->
+    <bean name="studentDto" class="com.sys.yang.standard2.StudentDto">
+        <property name="scoreList">
+            <list value-type="com.sys.yang.standard2.Score">
+                <ref bean="socre1"/>
+                <ref bean="socre2"/>
+            </list>
+        </property>
+        <property name="stringArray">
+            <array>
+                <value>a</value>
+                <value>b</value>
+                <value>c</value>
+            </array>
+        </property>
+        <property name="student" ref="student"/>
+    </bean>
+
+
+</beans>

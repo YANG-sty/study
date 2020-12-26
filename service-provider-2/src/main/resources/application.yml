@@ -1,0 +1,32 @@
+server:
+  port: 7072 #端口
+  # 应用名称
+spring:
+  application:
+    name: service-provider
+
+  #配置
+  # 主机名
+eureka:
+  instance:
+    hostname: service-provider-cloud
+    prefer-ip-address: true # 是否使用ip地址注册
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} # ip:port
+  client:
+    register-with-eureka: true # 是否将自己注册到 注册中心， 默认为true
+    fetch-registry: true # 从注册中心获取服务注册信息， 默认为true
+    registry-fetch-interval-seconds: 30 #Eureka clint 去服务器拉取注册信息，默认为30s
+    service-url:
+      defaultZone: http://root:123456@localhost:8760/eureka/,http://root:123456@localhost:8761/eureka/,http://root:123456@localhost:8762/eureka/
+#      defaultZone: http://localhost:8760/eureka/,http://localhost:8761/eureka/,http://localhost:8762/eureka/
+
+# 度量指标监控 与 健康检查
+management:
+  endpoints:
+    web:
+      exposure:
+        include: shutdown # 开启 shutdown 端点访问
+  endpoint:
+    shutdown:
+      enabled: true # 开启 shutdown 实现优雅停服
+
