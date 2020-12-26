@@ -4,6 +4,13 @@ server:
 spring:
   application:
     name: service-consumer
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/yang_zzu?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
 
   #配置
   # 主机名
@@ -36,3 +43,15 @@ service-provider: # 指定策略的服务名称
   ribbon:
     NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule #轮询策略（默认）
 #    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule #随机策略
+    listOfServers: http://localhost:7071,http://localhost:7072 # 指定ribbon 直连的地址
+
+# 关闭 eureka 使用 ribbon 点对点直连
+#ribbon:
+#  eureka:
+#    enabled: false # false 关闭， true 开启
+
+# 提供服务的服务名称
+yang:
+  provide:
+    name: service-provider
+

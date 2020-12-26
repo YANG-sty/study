@@ -4,6 +4,31 @@ server:
 spring:
   application:
     name: service-provider
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/yang_zzu?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+
+#mybatisplus
+mybatis-plus:
+  type-aliases-package: com.sys.yang.domain
+  global-config:
+    id-type: 0
+    field-strategy: 2
+    db-column-underline: true
+    refresh-mapper: true
+    key-generator: com.baomidou.mybatisplus.incrementer.OracleKeyGenerator
+    logic-delete-value: 1
+    logic-not-delete-value: 0
+    sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+#    meta-object-handler: com.gree.config.mybatis.MpFillHandler
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    jdbc-type-for-null: null
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  mapper-locations: classpath*:/com/sys/yang/dao/xml/*Mapper.xml
 
   #配置
   # 主机名

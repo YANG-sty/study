@@ -6,7 +6,6 @@ import com.sys.yang.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.client.loadbalancer.LoadBalancerClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -32,7 +31,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order selectOrderById(Integer id) {
-        return new Order(id, "order-001", "henan", 58000D, selectProductListByDiscoveryClint());
+        return new Order(id, "order-001", "henan", 58000D, selectProductListByLoadBalancerClint());
     }
 
     // 方式 1 进行远程调用

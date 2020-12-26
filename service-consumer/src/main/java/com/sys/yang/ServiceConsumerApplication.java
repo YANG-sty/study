@@ -5,6 +5,7 @@ import com.netflix.loadbalancer.RoundRobinRule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
  */
 @SpringBootApplication
 //@EnableEurekaClient // 当前版本如果配置了 Eureka 注册中心，默认会开启注解
+@EnableFeignClients(basePackages = {"com.sys"})
 class ServiceConsumerApplication {
 
     // 手动注入 RestTemplate
