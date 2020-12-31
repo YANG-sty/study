@@ -43,7 +43,7 @@ service-provider: # 指定策略的服务名称
   ribbon:
     NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule #轮询策略（默认）
 #    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule #随机策略
-    listOfServers: http://localhost:7071,http://localhost:7072 # 指定ribbon 直连的地址
+#    listOfServers: http://localhost:7071,http://localhost:7072 # 指定ribbon 直连的地址
 
 # 关闭 eureka 使用 ribbon 点对点直连
 #ribbon:

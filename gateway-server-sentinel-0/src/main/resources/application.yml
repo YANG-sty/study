@@ -1,0 +1,73 @@
+server:
+  port: 5000 #端口
+spring:
+  application:
+    name: getway-service-sentinel # 应用名称
+  cloud:
+    sentinel:
+      filter:
+        enabled: false    #防止网关流控控制台上看到 网关的URL资源，从而将 网关限流
+    gateway:  #路由规则
+      discovery:
+        locator: #是否与服务发现组件结合，通过 serverId 转发到具体服务实例
+          enabled: true    #是否开启基于服务发现的路由策略
+          lower-case-service-id: true     #是否将服务名称转为小写
+      routes:
+        - id: service-provider123            #路由id, 唯一
+          uri: lb://service-provider      #目标url， lb:// 更具服务名称从注册中心获得服务请求地址
+          predicates:                    #断言（判断条件，相当于 zuul 中的 shouldFilter
+            - Path=/product/**, /sentinelProduct/**, /api-gateway/{segment}   #匹配对应的 url 的请求，将匹配到的请求追加在目标 url 之后，lb://service-provider/**
+            - Query=token, abc.         #匹配请求参数中包含token 并且参数值满足正则表达式 abc. 的请求, abc 后面的点，匹配除换行符 \n 之外的任何单字符
+            - Method=GET                #匹配任意 GET 请求
+            - After=2020-12-29T11:12:58.000+08:00[Asia/Shanghai]   #匹配北京时间 2020-12-29 11:12:58之后的时间，能够正常访问
+#          filters: #网关过滤器
+#            - AddRequestParameter=flag, 10086 #在请求中添加 flag=10086 传递给接口
+#            - SetStatus=NOT_FOUND    #任何情况下相应的 http 请求的状态都是404 或者请求的枚举 NOT_FOUND
+
+        - id: service-consumer
+          uri: lb://service-consumer
+          predicates:                    #断言（判断条件，相当于 zuul 中的 shouldFilter
+            - Path=/order/**          #匹配对应的 url 的请求，将匹配到的请求追加在目标 url 之后
+
+eureka:   #eureka配置
+  instance:
+    hostname: geteway-service   # 主机名
+    prefer-ip-address: true # 是否使用ip地址注册
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} # ip:port
+  client:
+    register-with-eureka: true # 是否将自己注册到 注册中心， 默认为true
+    fetch-registry: true # 从注册中心获取服务注册信息， 默认为true
+    registry-fetch-interval-seconds: 30 #Eureka clint 去服务器拉取注册信息，默认为30s
+    service-url:
+      defaultZone: http://root:123456@localhost:8760/eureka/,http://root:123456@localhost:8761/eureka/,http://root:123456@localhost:8762/eureka/
+#       defaultZone: http://localhost:8760/eureka/,http://localhost:8761/eureka/,http://localhost:8762/eureka/
+
+# 度量指标监控 与 健康检查
+management:
+  endpoints:
+    web:
+      exposure:
+        include: shutdown # 开启 shutdown 端点访问
+  endpoint:
+    shutdown:
+      enabled: true # 开启 shutdown 实现优雅停服
+
+
+# Ribbon 负载均衡策略
+service-provider: # 指定策略的服务名称
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule #轮询策略（默认）
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule #随机策略
+    listOfServers: http://localhost:7071,http://localhost:7072 # 指定ribbon 直连的地址
+
+# 关闭 eureka 使用 ribbon 点对点直连
+#ribbon:
+#  eureka:
+#    enabled: false # false 关闭， true 开启
+
+# 提供服务的服务名称
+yang:
+  provide:
+    name: service-provider
+
+

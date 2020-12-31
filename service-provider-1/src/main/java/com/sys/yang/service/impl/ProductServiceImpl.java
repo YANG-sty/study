@@ -20,4 +20,13 @@ public class ProductServiceImpl implements ProductServcie {
                 new Product(3, "apple", 22, 4300)
         );
     }
+
+    @Override
+    public List<Product> postListProduct() {
+        return Arrays.asList(
+                new Product(100, "post", 2, 2300),
+                new Product(200, "post", 33, 1300),
+                new Product(300, "post", 22, 4300)
+        );
+    }
 }

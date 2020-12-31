@@ -1,0 +1,108 @@
+server:
+  port: 9000 #端口
+spring:
+  application:
+    name: getway-service # 应用名称
+#  redis:  #redis 缓存
+#    timeout: 10000    #连接超时时间
+#    host: 192.168.44.10   #ip地址
+#    port: 6379  #端口
+##    password: root  # redis连接密码
+#    database: 0    #选择哪一个库
+#    lettuce:
+#      pool:
+#        max-active: 1024  #最大连接数，默认 8
+#        max-wait: 10000   #最大连接阻塞等待时间， 单位毫秒， 默认 -1
+#        max-idle: 200   #最大空闲连接数，默认 8
+#        min-idle: 5   #最小空闲连接数，默认 0
+  cloud:
+    sentinel:
+      filter:
+        enabled: false    #防止网关流控控制台上看到 网关的URL资源，从而将 网关限流
+    gateway:  #路由规则
+      discovery:
+        locator: #是否与服务发现组件结合，通过 serverId 转发到具体服务实例
+          enabled: true    #是否开启基于服务发现的路由策略
+          lower-case-service-id: true     #是否将服务名称转为小写
+      routes:
+        - id: product-service            #路由id, 唯一
+#          uri: http://localhost:7071/    #目标url， 路由到微服务的地址
+          uri: lb://service-provider      #目标url， lb:// 更具服务名称从注册中心获得服务请求地址
+          predicates:                    #断言（判断条件，相当于 zuul 中的 shouldFilter
+#            - Path=/product/**, /api-gateway/**   #匹配对应的 url 的请求，将匹配到的请求追加在目标 url 之后，lb://service-provider/product/**
+            - Path=/product/**, /api-gateway/{segment}   #匹配对应的 url 的请求，将匹配到的请求追加在目标 url 之后，lb://service-provider/**
+            - Query=token, abc.         #匹配请求参数中包含token 并且参数值满足正则表达式 abc. 的请求
+            - Method=GET                #匹配任意 GET 请求
+            - After=2020-12-29T11:12:58.000+08:00[Asia/Shanghai]   #匹配北京时间 2020-12-29 11:12:58之后的时间，能够正常访问
+#            - RemoteAddr=172.28.14.52/0 #匹配远程地址请求是RemoteAddr 的请求， 0 表示子网掩码（表示所有网段)
+#            - Header=X-Request-Id, \d+  #匹配请求头包含 X-Request-Id 并且其值匹配正则表达是 \d+ 的请求，\d+ 表示可以出现1次或是n次数字
+          filters: #网关过滤器
+#            - name: RequestRateLimiter    #限流过滤器
+#              args:
+#                redis-rate-limiter.replenishRate: 1   #令牌桶每秒填充速率
+#                redis-rate-limiter.burstCapacity: 3   #令牌桶总容量
+#                key-resolver:  "#{@pathKeyResolver}"   #使用 SpEl 表达式按名称应用bean, 请求路径限流
+#                key-resolver:  "#{@parameterKeyResolver}"   #使用 SpEl 表达式按名称应用bean, 请求参数限流
+#                key-resolver:  "#{@ipKeyResolver}"   #使用 SpEl 表达式按名称应用bean, ip限流
+#            - PrefixPath=/product #将 /1 重写为 /product/1
+#            - RewritePath=/api-gateway(?<segment>/?.*), $\{segment}  #将/api-gateway/product/info?id=123&token=abc1 重写为 /product/info?id=123&token=abc1
+#            - StripPrefix=2   #过滤掉前两个路径个数，将/api-gateway/test/api/product/info?id=123&token=abc1 第一个重写为 /test/api/product/info?id=123&token=abc1 第二个重写为 /product/info?id=123&token=abc1 ,
+#            - SetPath=/product/{segment} #将 predicates - Path 中的{segment} 添加到 /product/{segment} 将 /api-gateway/info?id=123&token=abc1 重写为 /product/info?id=123&token=abc1
+            - AddRequestParameter=flag, 10086 #在请求中添加 flag=10086 传递给接口
+            - SetStatus=NOT_FOUND    #任何情况下相应的 http 请求的状态都是404 或者请求的枚举 NOT_FOUND
+
+        - id: service-consumer
+          uri: lb://service-consumer
+          predicates:                    #断言（判断条件，相当于 zuul 中的 shouldFilter
+            - Path=/order/**          #匹配对应的 url 的请求，将匹配到的请求追加在目标 url 之后
+  #数据库
+  main:
+    allow-bean-definition-overriding: true
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/yang_zzu?useUnicode=true&characterEncoding=utf8&useSSL=false&useLegacyDatetimeCode=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+
+eureka:   #eureka配置
+  instance:
+    hostname: geteway-service   # 主机名
+    prefer-ip-address: true # 是否使用ip地址注册
+    instance-id: ${spring.cloud.client.ip-address}:${server.port} # ip:port
+  client:
+    register-with-eureka: true # 是否将自己注册到 注册中心， 默认为true
+    fetch-registry: true # 从注册中心获取服务注册信息， 默认为true
+    registry-fetch-interval-seconds: 30 #Eureka clint 去服务器拉取注册信息，默认为30s
+    service-url:
+      defaultZone: http://root:123456@localhost:8760/eureka/,http://root:123456@localhost:8761/eureka/,http://root:123456@localhost:8762/eureka/
+#       defaultZone: http://localhost:8760/eureka/,http://localhost:8761/eureka/,http://localhost:8762/eureka/
+
+# 度量指标监控 与 健康检查
+management:
+  endpoints:
+    web:
+      exposure:
+        include: shutdown # 开启 shutdown 端点访问
+  endpoint:
+    shutdown:
+      enabled: true # 开启 shutdown 实现优雅停服
+
+
+# Ribbon 负载均衡策略
+service-provider: # 指定策略的服务名称
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule #轮询策略（默认）
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule #随机策略
+    listOfServers: http://localhost:7071,http://localhost:7072 # 指定ribbon 直连的地址
+
+# 关闭 eureka 使用 ribbon 点对点直连
+#ribbon:
+#  eureka:
+#    enabled: false # false 关闭， true 开启
+
+# 提供服务的服务名称
+yang:
+  provide:
+    name: service-provider
+
+
