@@ -1,0 +1,18 @@
+# bootstrap.yml 的优先级高于 application.yml  ,由于，nacos配置中心使用的是 application.yml 配置
+# 项目的服务中需要使用 bootstrap.yml
+server:
+  port: 58011 #启动端口
+spring:
+  application:
+    name: nacos-server-1
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848 #配置中心地址
+        file-extension: yaml  #配置中心的配置文件的后缀
+        namespace: fca23eb6-3866-4b8c-8f86-5eeb14e0599d #命名空间的id
+        group: TEST_GROUP #配置组，不指定默认是 DEFAULT_GROUP
+
+
+
+

@@ -1,0 +1,32 @@
+# bootstrap.yml 的优先级高于 application.yml  ,由于，nacos配置中心使用的是 application.yml 配置
+# 项目的服务中需要使用 bootstrap.yml
+server:
+  port: 58010 #启动端口
+spring:
+  application:
+    name: nacos-server-0
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848 #配置中心地址
+        file-extension: yaml  #配置中心的配置文件的后缀
+        namespace: fca23eb6-3866-4b8c-8f86-5eeb14e0599d #命名空间的id
+        group: NACOS_GROUP #配置组，不指定默认是 DEFAULT_GROUP
+        extension-configs[0]: #扩展 dataid
+          data-id: nacos-demo.yaml
+#          group: DEFAULT_GROUP #默认是DEFAULT_GROUP
+          refresh: true #是否动态刷新，默认 false
+        extension-configs[1]:
+          data-id: extension-configs-a.yaml
+          group: GLOBALE_GROUP
+          refresh: true
+        shared-configs[0]: #共享 dataid
+          data-id: nacos-share-config-0.yaml
+          group: SHARE_GROUP
+          refresh: true
+#配置文件优先级问题： shared（下标越大优先级越高） < extension（下标越大优先级越高） < 服务本身的配置
+
+
+
+
+
