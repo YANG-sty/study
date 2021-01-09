@@ -7,17 +7,20 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ioc" />
-        <module name="nacos-demo" />
         <module name="nacos-server-1" />
-        <module name="service-consumer" />
-        <module name="service-provider-2" />
-        <module name="eureka-server-1" />
-        <module name="gateway-server-sentinel-0" />
         <module name="nacos-server-0" />
-        <module name="eureka-server-0" />
         <module name="getway-server-0" />
-        <module name="eureka-server-2" />
         <module name="service-provider-1" />
+        <module name="gateway-server-sentinel-0" />
+        <module name="eureka-server-2" />
+        <module name="eureka-server-1" />
+        <module name="eureka-server-0" />
+        <module name="service-provider-2" />
+        <module name="service-consumer" />
+        <module name="nacos-provider-2" />
+        <module name="nacos-provider-1" />
+        <module name="nacos-demo" />
+        <module name="nacos-consumer" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -32,7 +35,10 @@
       <module name="gateway-server-sentinel-0" options="-parameters" />
       <module name="getway-server-0" options="-parameters" />
       <module name="ioc" options="-parameters" />
+      <module name="nacos-consumer" options="-parameters" />
       <module name="nacos-demo" options="-parameters" />
+      <module name="nacos-provider-1" options="-parameters" />
+      <module name="nacos-provider-2" options="-parameters" />
       <module name="nacos-server-0" options="-parameters" />
       <module name="nacos-server-1" options="-parameters" />
       <module name="service-consumer" options="-parameters" />

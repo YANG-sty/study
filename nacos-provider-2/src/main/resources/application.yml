@@ -1,0 +1,13 @@
+server:
+  port: 8882 #端口
+
+spring:
+  application:
+    name: nacos-provider
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848,127.0.0.1:8849,127.0.0.1:8850  # nacos服务器地址
+        namespace: 5129a7bf-a75e-4b17-9f17-36b252547732  #命名空间
+        group: NACOS_PROVIDER #群组
+        ephemeral: false   #false为永久实例，true表示临时实例开启，注册为临时实例
