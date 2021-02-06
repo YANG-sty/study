@@ -6,6 +6,8 @@ import com.sys.yang.service.UserServiceRemote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author yangLongFei 2020-12-26-20:40
  */
@@ -22,5 +24,15 @@ public class UserServiceRemoteImpl implements UserServiceRemote {
         boolean b = userServiceClint.insertUser(user);
         return b;
 
+    }
+
+    /**
+     * 查询用户
+     *
+     * @param user
+     */
+    @Override
+    public List<User> selectUserList(User user) {
+        return userServiceClint.selectUserList(user);
     }
 }

@@ -8,6 +8,8 @@ import com.sys.yang.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * @author yangLongFei 2020-12-26-19:37
  */
@@ -23,5 +25,8 @@ public class UserServiceApiImpl implements UserServiceApi {
         return b;
     }
 
-
+    @Override
+    public List<User> selectUserList(User user) {
+        return userService.selectUserList(user);
+    }
 }

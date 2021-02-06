@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 //@EnableEurekaClient // 当前版本如果配置了 Eureka 注册中心，默认会开启注解
 @EnableFeignClients(basePackages = {"com.sys"})
-class ServiceConsumerApplication {
+public class ServiceConsumerApplication {
 
     // 手动注入 RestTemplate
     @Bean
@@ -34,7 +34,7 @@ class ServiceConsumerApplication {
     }
 
     public static void main(String[] args) {
-        SpringApplication.run(ServiceConsumerApplication.class);
+        SpringApplication.run(ServiceConsumerApplication.class, args);
     }
 
 }
