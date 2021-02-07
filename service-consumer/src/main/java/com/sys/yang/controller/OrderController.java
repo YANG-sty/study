@@ -40,5 +40,18 @@ public class OrderController {
         return productServiceManager.selectOrderById(id);
     }
 
+    /**
+     * 每次调用睡眠1.5秒，模拟超时的报警
+     */
+    @GetMapping("/timeout")
+    public String timeout() {
+        try {
+            Thread.sleep(1500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "timeout";
+    }
+
 
 }
