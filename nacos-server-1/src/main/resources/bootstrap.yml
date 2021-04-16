@@ -10,7 +10,7 @@ spring:
       config:
         server-addr: 127.0.0.1:8848 #配置中心地址
         file-extension: yaml  #配置中心的配置文件的后缀
-        namespace: fca23eb6-3866-4b8c-8f86-5eeb14e0599d #命名空间的id
+        namespace: 3c4501b8-a243-4b55-a891-d996538f75f5 #命名空间的id
         group: TEST_GROUP #配置组，不指定默认是 DEFAULT_GROUP
 
 

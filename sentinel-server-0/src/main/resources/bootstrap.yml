@@ -1,0 +1,58 @@
+server:
+  port: 1010 #端口
+
+spring:
+  application:
+    name: sentinel-server
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848,127.0.0.1:8849,127.0.0.1:8850 #配置中心地址
+        file-extension: yaml  #配置中心的配置文件的后缀
+        namespace: 3c4501b8-a243-4b55-a891-d996538f75f5 #命名空间的id
+        group: DEV_GROUP #配置组，不指定默认是 DEFAULT_GROUP
+    sentinel:
+      transport:
+        port: 8799
+        dashboard: localhost:8080
+      datasource:
+        sentinel_flow:
+          nacos: # 限流规则
+            server-addr: localhost:8848
+            namespace: 3c4501b8-a243-4b55-a891-d996538f75f5
+            dataId: ${spring.application.name}-flow-rules
+            groupId: SENTINEL_GROUP
+            # 规则类型，取值见：org.springframework.cloud.alibaba.sentinel.datasource.RuleType
+            rule_type: flow
+        sentinel_degrade:
+          nacos: # 降级规则
+            server-addr: localhost:8848
+            namespace: 3c4501b8-a243-4b55-a891-d996538f75f5
+            dataId: ${spring.application.name}-degrade-rules
+            groupId: SENTINEL_GROUP
+            rule-type: degrade
+        sentinel_param_flow:
+          nacos: # 限流规则
+            server-addr: localhost:8848
+            namespace: 3c4501b8-a243-4b55-a891-d996538f75f5
+            dataId: ${spring.application.name}-param-flow
+            groupId: SENTINEL_GROUP
+            # 规则类型，取值见：org.springframework.cloud.alibaba.sentinel.datasource.RuleType
+            rule_type: param-flow
+        sentinel_authority_rules:
+          nacos: # 限流规则
+            server-addr: localhost:8848
+            namespace: 3c4501b8-a243-4b55-a891-d996538f75f5
+            dataId: ${spring.application.name}-authority-rules
+            groupId: SENTINEL_GROUP
+            # 规则类型，取值见：org.springframework.cloud.alibaba.sentinel.datasource.RuleType
+            rule_type: authority
+        sentinel_system_rules:
+          nacos: # 限流规则
+            server-addr: localhost:8848
+            namespace: 3c4501b8-a243-4b55-a891-d996538f75f5
+            dataId: ${spring.application.name}-system-rules
+            groupId: SENTINEL_GROUP
+            # 规则类型，取值见：org.springframework.cloud.alibaba.sentinel.datasource.RuleType
+            rule_type: system
+

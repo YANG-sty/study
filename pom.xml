@@ -25,6 +25,7 @@
         <module>nacos-provider-1</module>
         <module>nacos-provider-2</module>
         <module>nacos-consumer</module>
+        <module>sentinel-server-0</module>
     </modules>
 
     <!-- spring boot 依赖 -->
